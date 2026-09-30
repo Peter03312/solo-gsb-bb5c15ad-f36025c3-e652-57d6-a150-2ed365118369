@@ -1,0 +1,208 @@
+:root {
+  --bg: #f4efe6;
+  --panel: #fbf8f1;
+  --ink: #3a2f25;
+  --muted: #8a7b68;
+  --line: #ddd2c0;
+  --clay: #b5532c;
+  --clay-dark: #8f3f1f;
+  --steel: #2f6d8f;
+  --amber: #c98a16;
+  --green: #4a7c3a;
+  --red: #b23a2f;
+  --shadow: 0 1px 3px rgba(70, 50, 30, .15);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+h1, h2, h3 { font-weight: 600; margin: 0 0 8px; }
+
+a { color: var(--steel); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 5px 12px;
+  border-radius: 5px;
+}
+button:hover { background: #f3ece0; }
+button.primary { background: var(--clay); border-color: var(--clay); color: #fff; }
+button.primary:hover { background: var(--clay-dark); }
+button.danger { color: var(--red); border-color: #e3b7b2; }
+button.ghost { background: none; border-color: transparent; color: var(--steel); padding: 2px 6px; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+input, select, textarea {
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 5px 8px;
+  background: #fff;
+  color: var(--ink);
+}
+input[type=number] { width: 90px; }
+label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 2px; }
+
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.topbar {
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+}
+.topbar .title { font-size: 17px; font-weight: 600; }
+.topbar .spacer { flex: 1; }
+.pill {
+  font-size: 12px;
+  background: #efe7d7;
+  border-radius: 10px;
+  padding: 2px 10px;
+  color: var(--muted);
+}
+.pill.v { background: #e3ede0; color: var(--green); }
+
+.wrap { max-width: 1100px; margin: 24px auto; padding: 0 18px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.project-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.project-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  display: block;
+  color: var(--ink);
+}
+.project-item:hover { text-decoration: none; border-color: var(--clay); }
+.project-item .name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.project-item .meta { color: var(--muted); font-size: 12px; }
+
+/* ---- 工作台布局 ---- */
+.workspace { display: grid; grid-template-columns: 300px 1fr 320px; gap: 0; height: calc(100vh - 53px); }
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 12px;
+}
+.sidebar.right { border-right: none; border-left: 1px solid var(--line); }
+.section { margin-bottom: 18px; }
+.section h3 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--muted); margin-bottom: 8px;
+}
+
+.canvas-host {
+  position: relative;
+  overflow: auto;
+  background:
+    linear-gradient(0deg, transparent 23px, #e8e0d2 24px),
+    linear-gradient(90deg, transparent 23px, #e8e0d2 24px),
+    #efe9dd;
+  background-size: 24px 24px;
+}
+#stage { display: block; }
+
+.shard-item {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  background: #fff;
+}
+.shard-item.selected { border-color: var(--clay); box-shadow: 0 0 0 2px rgba(181,83,44,.18); }
+.shard-item .n { font-weight: 600; }
+.shard-item .m { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+.mini-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+.mini-btns button { padding: 2px 8px; font-size: 12px; }
+
+.seam-item {
+  border: 1px solid var(--line);
+  border-left-width: 4px;
+  border-radius: 6px;
+  padding: 7px 9px;
+  margin-bottom: 7px;
+  background: #fff;
+  font-size: 12.5px;
+}
+.seam-item.adopted { border-left-color: var(--steel); }
+.seam-item.proposed { border-left-color: var(--amber); }
+.seam-item.rejected { border-left-color: var(--red); background: #fbf1f0; }
+.seam-item .st { font-weight: 600; }
+.seam-item.adopted .st { color: var(--steel); }
+.seam-item.proposed .st { color: var(--amber); }
+.seam-item.rejected .st { color: var(--red); }
+.seam-item .chain { color: var(--red); margin-top: 3px; }
+.seam-item .note { color: var(--muted); margin-top: 2px; }
+
+#chainPanel .chain-step {
+  padding: 5px 8px;
+  border-bottom: 1px dashed var(--line);
+  font-size: 12.5px;
+}
+#chainPanel .chain-step:last-child { border-bottom: none; }
+
+.hint { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.good { color: var(--green); font-weight: 600; }
+.bad { color: var(--red); font-weight: 600; }
+
+/* ---- 比例尺标定 ---- */
+#scaleCanvas {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #eee;
+  cursor: crosshair;
+}
+
+/* ---- 浮层 ---- */
+#toast {
+  position: fixed; top: 64px; left: 50%; transform: translateX(-50%);
+  z-index: 60; display: flex; flex-direction: column; gap: 8px; align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(50,38,28,.92); color: #fff; padding: 8px 16px;
+  border-radius: 6px; font-size: 13px; box-shadow: var(--shadow);
+  max-width: 520px;
+}
+.toast.error { background: var(--red); }
+.toast.success { background: var(--green); }
+
+.modal-mask {
+  position: fixed; inset: 0; background: rgba(40,30,20,.45);
+  z-index: 50; display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: var(--panel); border-radius: 10px; padding: 22px;
+  width: 420px; max-width: 92vw; box-shadow: 0 8px 30px rgba(0,0,0,.25);
+}
+.modal .actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 8px; }
+
+#ghostInfo { font-size: 12px; margin-top: 4px; }
+canvas { outline: none; }

@@ -1,0 +1,20 @@
+{
+  "name": "potsherd-workbench",
+  "version": "1.0.0",
+  "description": "考古陶片拼接推演 Web 工作台",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node test/geometry.test.js",
+    "test:e2e": "node test/e2e.smoke.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

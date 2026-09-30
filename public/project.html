@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陶片拼接工作台</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="/index.html">← 方案列表</a>
+  <span class="title" id="projName">…</span>
+  <span class="pill" id="projTol"></span>
+  <span class="spacer"></span>
+  <span class="pill v" id="versionPill">v-</span>
+  <button id="settingsBtn">方案设置</button>
+</div>
+
+<div class="workspace">
+  <!-- 左栏：陶片管理 -->
+  <div class="sidebar">
+    <div class="section">
+      <h3>陶片</h3>
+      <div id="shardList"></div>
+      <button class="primary" id="uploadBtn" style="width:100%">＋ 上传陶片照片并标定比例尺</button>
+    </div>
+  </div>
+
+  <!-- 中栏：画布 -->
+  <div class="canvas-host" id="canvasHost">
+    <canvas id="stage"></canvas>
+  </div>
+
+  <!-- 右栏：接缝与接缝链 -->
+  <div class="sidebar right">
+    <div class="section">
+      <h3>记录接缝（局部坐标映射）</h3>
+      <div class="row" style="margin-bottom:6px">
+        <div style="flex:1">
+          <label>A 片（from）</label>
+          <select id="fromShard" style="width:100%"></select>
+        </div>
+        <div style="flex:1">
+          <label>B 片（to）</label>
+          <select id="toShard" style="width:100%"></select>
+        </div>
+      </div>
+      <p class="hint">映射关系：B 局部点 = 旋转(A 局部点) + 平移。角度单位度（逆时针正），平移单位毫米。</p>
+      <div class="row">
+        <div><label>旋转 (°)</label><input id="rot" type="number" step="0.5" value="0"></div>
+        <div><label>平移 X (mm)</label><input id="tx" type="number" step="0.1" value="0"></div>
+        <div><label>平移 Y (mm)</label><input id="ty" type="number" step="0.1" value="0"></div>
+      </div>
+      <div style="margin-top:6px">
+        <label>接缝说明</label>
+        <textarea id="seamNote" rows="2" style="width:100%"
+          placeholder="例如：口沿断面第 2–3 齿相扣，纹饰对齐"></textarea>
+      </div>
+      <div id="ghostInfo" class="hint">输入映射参数后在此预览闭合差。</div>
+      <div class="row" style="margin-top:8px">
+        <button class="primary" id="adoptBtn">采纳接缝</button>
+        <button id="proposeBtn">仅记录（proposed）</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>选中陶片所依据的接缝链</h3>
+      <div id="chainPanel"><p class="hint">在画布或左侧点选一片陶片，查看其到连通组锚点所依据的接缝链。</p></div>
+    </div>
+
+    <div class="section">
+      <h3>全部接缝</h3>
+      <div id="seamList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 上传 / 比例尺标定模态框 -->
+<div class="modal-mask" id="uploadModal" hidden>
+  <div class="modal" style="width:560px">
+    <h2>上传陶片照片</h2>
+    <p class="hint">在图上点击比例尺的两个端点画出标定线，再填写该线段代表的真实毫米数。</p>
+    <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/gif">
+    <canvas id="scaleCanvas" width="520" height="260" style="margin-top:10px"></canvas>
+    <div class="row" style="margin-top:10px">
+      <div style="flex:1"><label>陶片名称</label><input id="shardName" style="width:100%" placeholder="如：T2-017"></div>
+      <div><label>标定线长度 (mm)</label><input id="scaleMm" type="number" step="0.1" value="10"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div style="flex:1"><label>备注</label><input id="shardNote" style="width:100%"></div>
+    </div>
+    <div class="actions">
+      <button id="cancelUpload">取消</button>
+      <button class="primary" id="confirmUpload" disabled>上传并标定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 方案设置模态框 -->
+<div class="modal-mask" id="settingsModal" hidden>
+  <div class="modal">
+    <h2>方案设置</h2>
+    <div style="margin-bottom:10px"><label>名称</label><input id="setName" style="width:100%"></div>
+    <div style="margin-bottom:10px"><label>备注</label><textarea id="setDesc" rows="2" style="width:100%"></textarea></div>
+    <div style="margin-bottom:10px"><label>环闭合位置容差 (mm)</label><input id="setTol" type="number" step="0.1" min="0.1"></div>
+    <div class="actions">
+      <button class="danger" id="deleteProject" style="margin-right:auto">删除方案</button>
+      <button id="cancelSettings">取消</button>
+      <button class="primary" id="saveSettings">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 版本冲突模态框 -->
+<div class="modal-mask" id="conflictModal" hidden>
+  <div class="modal">
+    <h2>⚠️ 版本冲突</h2>
+    <p id="conflictText"></p>
+    <p class="hint">为避免静默覆盖他人修改，本次操作没有写入。请刷新载入最新布局后重新操作。</p>
+    <div class="actions">
+      <button class="primary" onclick="location.reload()">立即刷新</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/shared/geometry.js"></script>
+<script src="/project.js"></script>
+</body>
+</html>

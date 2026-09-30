@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>陶片拼接工作台 · 方案列表</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="topbar">
+  <span class="title">🏺 陶片拼接推演工作台</span>
+</div>
+<div class="wrap">
+  <div class="card">
+    <h2>新建拼接方案</h2>
+    <div class="row">
+      <div>
+        <label>方案名称</label>
+        <input id="newName" placeholder="例如：探沟 T2 第三层罐形器" style="width:260px">
+      </div>
+      <div>
+        <label>环闭合容差（毫米）</label>
+        <input id="newTol" type="number" step="0.1" min="0.1" value="2">
+      </div>
+      <div style="flex:1">
+        <label>备注（可选）</label>
+        <input id="newDesc" placeholder="出土单位、器物编号等" style="width:100%">
+      </div>
+      <button class="primary" id="createBtn">创建</button>
+    </div>
+  </div>
+
+  <h2 style="margin: 18px 0 10px;">全部方案</h2>
+  <div class="project-list" id="list"></div>
+</div>
+<div id="toast"></div>
+<script src="/index.js"></script>
+</body>
+</html>
